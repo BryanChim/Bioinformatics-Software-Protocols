@@ -1,0 +1,54 @@
+1) Convert the .rpkm_# output files using the edgeToDeseq.perl script (in the additionalScripts directory of the EDGE-pro installation folder)
+
+perl edgeToDeseq.perl xxx.rpkm_0 yyy.rpkm_0
+
+* where xxx and yyy are the prefixes of the groups you want to compare
+
+2) Transfer the output (called deseqFile, by default - but you should probably rename it) -- to your working directory on your computer that has R installed.
+
+3) Assuming you have Bioconductor installed, proceed to install DESeq by entering the following:
+
+source("http://bioconductor.org/biocLite.R")
+bioclite()
+biocLite("DESeq")
+
+And then you can load the DESeq module with:
+
+library("DESeq") 
+
+whenever you restart R.
+
+4) With DESeq installed and loaded, set your working directory in R:
+
+> setwd( '\working directory\' )
+
+*when entering working directory path, must escape backslashes ('\\') 
+
+5) Read in your counts table:
+
+> data = read.table( "deseqFile", header=TRUE, row.names=1 )
+
+6) Set the names of your conditions, and then generate a CountDataSet object (the basic data structure for DESeq)
+
+> condition = factor( c( "C1", "C2" ) )
+
+> cds = newCountDataSet( data, condition )
+
+7) estimate Size Factors and Dispersions -- DESeq's form of normalization:
+
+> cds = estimateSizeFactors ( cds )
+
+> cds = estimateDispersions ( cds, method='blind', sharingMode='fit-only' )
+
+8) Perform the negative Binomial Distribution tests:
+
+> res = nbinomTest ( cds, "C1", "C2" )
+
+* note, the condition names C1 and C2 must match the names you chose when you declared the "condition" above
+
+9) Output to a table:
+
+> write.table ( res, "C1--C2_sig_genes.txt", sep='\t', row.names=F )
+
+
+ 

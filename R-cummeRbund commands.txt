@@ -1,0 +1,72 @@
+***FIRST TIME INSTALL***
+
+> source("http://bioconductor.org/biocLite.R")
+> biocLite("cummeRbund")
+
+______________________________________________
+
+***LOADING CUMMERBUND in R***
+
+> library('cummeRbund')
+
+	C:\\Transfer Files\\Classes\\Ping Xu Research\\T-DIFF_OUTs
+
+> setwd('\working directory\')
+
+	*when entering working directory path, must escape backslashes ('\\')
+
+> cuff <- readCufflinks('directory of Cuffdiff output')
+
+______________________________________________
+
+***GENERAL DISTRIBUTION PLOTS***
+
+> dispersionPlot(genes(cuff)
+
+> csScatter(genes(cuff), 'C1', 'C2')
+
+> csBoxplot(genes(cuff),replicates=T)
+
+> csBoxplot(genes(cuff))
+
+> csVolcano(genes(cuff), 'C1', 'C2', alpha=0.05, showSignificant=T)
+
+______________________________________________
+
+***EXTRACTION OF SIGNIFICANT GENES***
+
+> sigGeneIds<-getSig(cuff, alpha=0.05, level='genes')
+
+> sigGenes<-getGenes(cuff,sigGeneIds)
+
+> dD <- diffData(sigGenes)
+
+> fN <- featureNames(sigGenes)
+
+> merged_names_diff <- merge (dD, fN, by.x="gene_id", by.y="tracking_id")
+
+> write.table(merged_names_diff, "sig_genes.txt", sep='\t', row.names=F)
+ 
+* then, if you want, you can open the output file in Excel and sort by p/q-value
+** -> DATA 
+** -> Sort 
+** -> Sort by: 'p_value'
+** -> Sort on: 'Value'
+** -> Order: Smallest to Largest
+
+* getGenes() function generates a CuffGeneSet object ('sigGenes' above) -- you can also perform other functions on this CuffGeneSet object like fpkm(), fpkmMatrix(), csHeatmap() etc. 
+______________________________________________
+
+***Barplot of FPKM Values for a Particular Gene***
+
+run the script at https://www.biostars.org/p/104897/
+	* don't ask me why, but this fixes the error with the bars not showing up in R v3.1.0
+
+> gene <- getGene(cuff, 'gene_name_or_gene_ID')
+
+> expressionBarplot(gene, replicates=T)
+
+* the 'replicates' parameter will plot the specific counts for each of your replicates; i think this could be useful for checking for integrity and outliers
+
+* you can use expressionPlot() function for a basic lineplot that can do a drawSummary, if you have multiple conditions
+
