@@ -1,6 +1,7 @@
 ***FIRST TIME INSTALL***
 
 > source("http://bioconductor.org/biocLite.R")
+> biocLite()
 > biocLite("cummeRbund")
 
 ______________________________________________
@@ -8,8 +9,6 @@ ______________________________________________
 ***LOADING CUMMERBUND in R***
 
 > library('cummeRbund')
-
-	C:\\Transfer Files\\Classes\\Ping Xu Research\\T-DIFF_OUTs
 
 > setwd('\working directory\')
 
